@@ -45,27 +45,80 @@ function numberCount(event) {
     console.log(event.target);
     if (event.target === voteUp) {
         console.log("2");
-    return voteUp.innerHTML++;
-    } else if(event.target === voteDown){
+        return voteUp.innerHTML++;
+    } else if (event.target === voteDown) {
         return voteDown.innerHTML++;
     }
 }
 
-function deleteComments(event){
+function deleteComments(event) {
     const btn = event.target;
-    const list = btn.parentNode;//commentList
+    const list = btn.parentNode; //commentList
     rootDiv.removeChild(list);
     //메인댓글 카운트 줄임.
-    if(mainCommentCount.innerHTML <= '0'){
-        mainCommentCount.innerHTML =0;
+    if (mainCommentCount.innerHTML <= '0') {
+        mainCommentCount.innerHTML = 0;
     } else {
         mainCommentCount.innerHTML--;
     }
 }
 
 //댓글보여주기
-function showComment(comment){
+function showComment(comment) {
     const userName = document.createElement('div');
     const inputValue = document.createElement('span');
-    const showTiem = document.createElement('div');
+    const showTime = document.createElement('div');
+    const voteDiv = document.createElement('div');
+    const countSpan = document.createElement('div');
+    const voteUp = document.createElement('button');
+    const voteDown = document.createElement('button');
+    const commentList = document.createElement('div');
+    //삭제버튼
+    const delBtn = document.createElement('button');
+    delBtn.className = 'deleteComment';
+    delBtn.innerHTML = '삭제';
+    commentList.className = 'eachComment';
+    userName.className = 'name';
+    inputValue.className = 'inputValue';
+    showTime.className = 'time';
+    voteDiv.className = 'voteDiv';
+    //유저네임 가져오기
+    userName.innerHTML = generateUserName();
+    userName.appendChild(delBtn);
+    //입력값 넘기기
+    inputValue.innerText = comment;
+    //타임스템프찍기 
+    showTime.innerHTML = generateTime();
+    countSpan.innerHTML = 0;
+    //투표창 만들기, css먼저 입혀야함. 
+    voteUp.id = "voteUp";
+    voteUp.innerHTML = '↑';
+    voteDown.id = "voteDown";
+    voteDown.innerHTML = '↓';
+    voteDiv.appendChild(voteUp);
+    voteDiv.appendChild(voteDown);
+    //댓글뿌려주기 
+    commentList.appendChild(userName);
+    commentList.appendChild(inputValue);
+    commentList.appendChild(showTime);
+    commentList.appendChild(voteDiv);
+    rootDiv.prepend(commentList);
+    voteUp.addEventListener("click", numberCount);
+    voteDown.addEventListener("click", numberCount);
+    delBtn.addEventListener("click", deleteComments);
+    console.dir(rootDiv);
 }
+
+function pressBtn() {
+    const currentVal = inputBar.ariaValueMax;
+
+    if (!currentVal.length) {
+        alert('댓글을 입력해주세요!');
+    } else {
+        showComment(currentVal);
+        mainCommentCount.innerHTML++;
+        inputVar.value = '';
+    }
+}
+
+btn.onclick = pressBtn;
